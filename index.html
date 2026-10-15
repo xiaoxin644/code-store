@@ -4,107 +4,175 @@
 
 <head>
 
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>兑换码自助商城</title>
+<title>礼品卡自助商城</title>
 
-  <style>
+<style>
 
-    body {
+*{box-sizing:border-box}
 
-      margin: 0;
+body{margin:0;background:#f4f5f7;color:#222;font-family:Arial,sans-serif}
 
-      padding: 24px;
+header{background:#171717;color:white;padding:24px 18px;text-align:center}
 
-      font-family: Arial, sans-serif;
+header h1{margin:0;font-size:26px}
 
-      background: #f4f5f7;
+header p{color:#ddd;font-size:14px}
 
-      color: #222;
+main{max-width:760px;margin:24px auto;padding:0 16px}
 
-    }
+h2{font-size:20px}
 
-    .card {
+.product{background:white;border-radius:14px;padding:20px;margin:14px 0;box-shadow:0 3px 12px #0000}
 
-      max-width: 420px;
+.product h3{margin-top:0}
 
-      margin: 40px auto;
+.price{font-size:23px;font-weight:bold;margin:12px 0}
 
-      padding: 24px;
+.muted{color:#666;font-size:14px}
 
-      background: white;
+label{display:block;margin:14px 0 6px}
 
-      border-radius: 16px;
+input,select{width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px}
 
-      box-shadow: 0 4px 18px #0001;
+button{width:100%;padding:13px;border:0;border-radius:9px;background:#222;color:white;font-size:16px;margin-top:16px}
 
-    }
+button:active{opacity:.8}
 
-    h1 { font-size: 25px; }
+#result{white-space:pre-line;background:#eef5ee;padding:14px;border-radius:8px;margin-top:16px;display:none}
 
-    .product {
+footer{text-align:center;padding:25px;color:#777;font-size:13px}
 
-      padding: 16px;
-
-      border: 1px solid #eee;
-
-      border-radius: 12px;
-
-    }
-
-    button {
-
-      width: 100%;
-
-      padding: 13px;
-
-      margin-top: 14px;
-
-      border: 0;
-
-      border-radius: 9px;
-
-      background: #222;
-
-      color: white;
-
-      font-size: 16px;
-
-    }
-
-    .hint { color: #666; font-size: 14px; }
-
-  </style>
+</style>
 
 </head>
 
 <body>
 
-  <div class="card">
+<header>
 
-    <h1>兑换码自助商城</h1>
+<h1>礼品卡自助商城</h1>
 
-    <p class="hint">选择商品并提交购买需求</p>
+<p>简单选购 · 提交订单 · 等待确认</p>
 
-    <div class="product">
+</header>
 
-      <h3>数字兑换码</h3>
+<main>
 
-      <p>价格：请联系商家确认</p>
+<h2>可选商品</h2>
 
-      <p class="hint">购买后按订单确认情况发放兑换码。</p>
+<div class="product">
 
-      <button onclick="alert('这是演示页面，暂未接入真实下单和付款系统。')">
+<h3>通用礼品卡</h3>
 
-        立即购买（演示）
+<p class="muted">演示商品，请在正式销售前填写真实品牌、面额和适用地区。</p>
 
-      </button>
+<div class="price">€10.00</div>
 
-    </div>
+<p class="muted">演示库存：20 件</p>
 
-  </div>
+</div>
+
+<div class="product">
+
+<h3>高级礼品卡</h3>
+
+<p class="muted">演示商品，请勿将此示例当作真实库存承诺。</p>
+
+<div class="price">€25.00</div>
+
+<p class="muted">演示库存：10 件</p>
+
+</div>
+
+<div class="product">
+
+<h3>提交购买需求</h3>
+
+<label for="product">选择商品</label>
+
+<select id="product" onchange="calc()">
+
+<option value="10">通用礼品卡 — €10</option>
+
+<option value="25">高级礼品卡 — €25</option>
+
+</select>
+
+<label for="qty">购买数量</label>
+
+<input id="qty" type="number" min="1" max="10" value="1" oninput="calc()">
+
+<label for="email">联系邮箱</label>
+
+<input id="email" type="email" placeholder="输入你的邮箱">
+
+<p id="total">订单金额：€10.00</p>
+
+<button onclick="submitOrder()">提交购买需求</button>
+
+<div id="result"></div>
+
+<p class="muted">当前为演示版本：订单只显示在本页面，不会发送到商家后台，也不会真实扣减库存或发放兑换码。</p>
+
+</div>
+
+</main>
+
+<footer>礼品卡自助商城 · 演示版本</footer>
+
+<script>
+
+function calc(){
+
+const price=Number(document.getElementById('product').value);
+
+const qty=Number(document.getElementById('qty').value);
+
+document.getElementById('total').textContent=
+
+'订单金额：€'+(price*Math.max(0,qty||0)).toFixed(2);
+
+}
+
+function submitOrder(){
+
+const email=document.getElementById('email').value.trim();
+
+const qty=Number(document.getElementById('qty').value);
+
+const price=Number(document.getElementById('product').value);
+
+const result=document.getElementById('result');
+
+if(!email||!email.includes('@')){
+
+alert('请填写有效的联系邮箱');return;
+
+}
+
+if(!Number.isInteger(qty)||qty<1||qty>10){
+
+alert('购买数量请填写 1 到 10');return;
+
+}
+
+result.style.display='block';
+
+result.textContent='购买需求已生成（仅演示）\n联系邮箱：'+email+
+
+'\n数量：'+qty+'\n金额：€'+(price*qty).toFixed(2)+
+
+'\n请注意：订单尚未发送至后台，也没有发生真实付款。';
+
+}
+
+calc();
+
+</script>
 
 </body>
 
